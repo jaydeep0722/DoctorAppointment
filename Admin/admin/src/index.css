@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+::-webkit-scrollbar {
+  @apply hidden
+}
+body {
+  color: rgb(95, 111, 255);
+}
+html {
+  scroll-behavior: smooth;
+}
+.btn {
+  background: rgba(95, 111, 255, 1);
+  border-radius: 54px;
+  width: 195px;
+  height: 54px;
+  color: white;
+}
+.background {
+  background: rgba(95, 111, 255, 1);
+}
+.shadow-box {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
