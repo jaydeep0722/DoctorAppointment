@@ -65,7 +65,6 @@
 
 // export default Footer;
 
-
 import React from "react";
 import { assets } from "../assets/assets/assets_frontend/assets.js";
 
@@ -105,16 +104,16 @@ const Footer = () => {
             COMPANY
           </h3>
           <ul className="ml-0 sm:ml-2 text-gray-600 mb-10 text-base sm:text-lg">
-            <li className="p-2 mb-2 text-gray-800 font-medium cursor-pointer hover:underline">
+            <li className="p-2 mb-2 text-gray-800 font-medium cursor-pointer ">
               HOME
             </li>
-            <li className="p-2 mb-2 text-gray-800 font-medium cursor-pointer hover:underline">
+            <li className="p-2 mb-2 text-gray-800 font-medium cursor-pointer ">
               ABOUT US
             </li>
-            <li className="p-2 mb-2 text-gray-800 font-medium cursor-pointer hover:underline">
+            <li className="p-2 mb-2 text-gray-800 font-medium cursor-pointer ">
               CONTACT US
             </li>
-            <li className="p-2 mb-2 text-gray-800 font-medium cursor-pointer hover:underline">
+            <li className="p-2 mb-2 text-gray-800 font-medium cursor-pointer ">
               PRIVACY POLICY
             </li>
           </ul>
