@@ -7,7 +7,7 @@ export const AppContext = createContext();
 
 const AppContextProviderFunc = (props) => {
   const [aToken, setAToken] = useState("");
-  const backEndUrl = "http://localhost:8001";
+  const backEndUrl = import.meta.env.VITE_BACKEND_URL;
   const [getdoctorsDoctors, setDoctors] = useState([]);
 
   // get Profile data
