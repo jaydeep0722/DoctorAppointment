@@ -1,5 +1,5 @@
 import DOCTOR from "../models/doctorModel.js";
-import bcrypt from "bcrypt";
+import bcrypt from 'bcryptjs';
 import jwt from "jsonwebtoken";
 
 import APPOINTMENT from "../models/Appointment.js";

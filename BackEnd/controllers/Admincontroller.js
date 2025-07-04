@@ -1,5 +1,5 @@
 import validator from "validator";
-import bcrypt from "bcrypt";
+import bcrypt from 'bcryptjs';
 import DOCTOR from "../models/doctorModel.js";
 import USER from "../models/userModel.js";
 import { v2 as cloudinary } from "cloudinary";
