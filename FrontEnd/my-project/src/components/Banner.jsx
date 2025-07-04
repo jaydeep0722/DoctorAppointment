@@ -44,8 +44,6 @@
 
 // export default Banner;
 
-
-
 import React from "react";
 import { assets } from "../assets/assets/assets_frontend/assets.js";
 import { useNavigate } from "react-router-dom";
@@ -77,7 +75,7 @@ const Banner = () => {
 
           <div className="p-2 md:p-0">
             <button
-              className="Morebtn_2 hover:scale-105 bg-white text-black"
+              className="btn_2 hover:scale-105 bg-white text-black"
               onClick={() => {
                 navigate("/login");
                 scrollTo(0, 0);
@@ -89,11 +87,12 @@ const Banner = () => {
         </div>
 
         {/* right side part */}
-        <div className="block md:block md:w-1/2 lg:w-[550px] relative mt-6 md:mt-0">
+
+        <div className="w-full md:w-1/2 lg:w-[550px] relative flex justify-center items-end">
           <img
-            className="w-full  md:w-[300px] lg:w-full md:pl-20 absolute md:relative bottom-0 right-0 max-w-md lg:h-[490px] md:h-[460px]"
+            className="w-[80%] md:w-[300px] lg:w-full lg:pl-20 max-w-md h-auto md:h-[460px] lg:h-[490px]"
             src={assets.appointment_img}
-            alt=""
+            alt="Appointment"
           />
         </div>
       </div>
@@ -102,10 +101,3 @@ const Banner = () => {
 };
 
 export default Banner;
-
-
-
-
-
-
-
