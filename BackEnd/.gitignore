@@ -1,5 +1,14 @@
-# dependencies
-/node_modules
+# Node.js dependencies
+node_modules/
 
+# Environment variables
 .env
-# production   
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# System files
+.DS_Store
+Thumbs.db

@@ -28,7 +28,7 @@ app.use('/api/user', UserRouter);
 app.use('/api/admin', Adminrouter);
 app.use("/api/doctor", doctorRouter);
 
-app.get('/',()=>{
+app.get('/',(req,res)=>{
   res.send("API WORKING PROPERLY");    
 });
 
