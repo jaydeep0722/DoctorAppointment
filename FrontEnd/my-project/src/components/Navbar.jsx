@@ -57,16 +57,10 @@
 
 // export default Navbar;
 
-
-
-
-
-
-
 import React, { useContext, useState } from "react";
 import { assets } from "../assets/assets/assets_frontend/assets.js";
 import { Link, useNavigate } from "react-router-dom";
-import HelperMuiNavbar from "../helper/helperMuiNavbar.jsx";
+import HelperMuiNavbar from "../helper/HelperMuiNav.jsx";
 import { AppContext } from "../context/AppContexts.jsx";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
