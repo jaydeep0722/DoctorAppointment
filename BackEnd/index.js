@@ -20,7 +20,11 @@ connectCloudinary()
 // middelewares
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
-app.use(cors())
+// Enable CORS
+app.use(cors({
+  origin: 'https://doctor-appointment-a9nj.vercel.app', // Your Vercel frontend
+  credentials: true //  using cookies 
+}));
 
 
 // Routes

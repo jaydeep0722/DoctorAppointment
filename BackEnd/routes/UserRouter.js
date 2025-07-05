@@ -30,5 +30,4 @@ UserRouter.post("/CancelAppointment", AuthUser, CancelAppointment);
 UserRouter.post("/PaymentRazorPay", AuthUser, PaymentRazorPay);
 UserRouter.post("/verifyPayment", AuthUser, verifyPayment);
 
-
 export default UserRouter;

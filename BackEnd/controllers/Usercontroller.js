@@ -1,7 +1,7 @@
 import validator from "validator";
 import USER from "../models/userModel.js";
 import DOCTOR from "../models/doctorModel.js";
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { v2 as cloudinary } from "cloudinary";
 import APPOINTMENT from "../models/Appointment.js";
@@ -12,51 +12,54 @@ import razorpay from "razorpay";
 
 const RegisterUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    if (!name || !email || !password) {
-      return res.json({
+    console.log("📥 API HIT: RegisterUser");
+
+    const { fullName, email, password } = req.body;
+    console.log("➡️ fullName:", fullName);
+    console.log("➡️ email:", email);
+    console.log("➡️ password:", password);
+    console.log("📦 req.body:", req.body);
+
+    if (!fullName || !email || !password) {
+      return res.status(400).json({
         success: false,
         message: "Missing Values",
       });
     }
 
     if (!validator.isEmail(email)) {
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: "Invalid email type",
       });
     }
 
     if (password.length < 6) {
-      return res.json({
+      return res.status(400).json({
         success: false,
-        message: "Please create strong Passowrd",
+        message: "Please create a strong password",
       });
     }
 
-    // hash password and then store
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword);
-
-    // create user and store in backend
-    const userData = {
-      name,
+    const newUser = new USER({
+      fullName,
       email,
       password: hashedPassword,
-    };
-    const user = new USER(userData);
+    });
 
-    const newuser = await user.save();
+    await newUser.save();
 
-    //   make token from id
-    const token = jwt.sign({ id: newuser._id }, process.env.JWT_SECRETKEY);
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRETKEY);
+    console.log("✅ Generated Token:", token);
 
     res.status(201).json({
       success: true,
-      message: "User created Success",
+      message: "User created successfully",
       TOKEN: token,
     });
   } catch (error) {
+    console.error(" Registration Error:", error.message); // error checking
     res.status(400).json({
       success: false,
       message: error.message,
@@ -121,9 +124,10 @@ const getProfileData = async (req, res) => {
 
 // update profile
 const updateProfileData = async (req, res) => {
-  const { userId, name, email, phoneNumber, address, dob, gender } = req.body;
+  const { userId, fullName, email, phoneNumber, address, dob, gender } =
+    req.body;
   const imageFile = req.file;
-  if (!name || !dob || !gender || !phoneNumber) {
+  if (!fullName || !dob || !gender || !phoneNumber) {
     return res.status(400).json({
       success: false,
       message: "Missing values for updating",
@@ -131,7 +135,7 @@ const updateProfileData = async (req, res) => {
   }
 
   const user = await USER.findByIdAndUpdate(userId, {
-    name,
+    fullName,
     email,
     phoneNumber,
     address: JSON.parse(address),
