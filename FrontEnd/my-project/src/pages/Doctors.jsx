@@ -1,3 +1,4 @@
+
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AllDoctors from "../helper/AllDoctors";
@@ -7,105 +8,70 @@ const Doctors = () => {
   const navigate = useNavigate();
   const { speciality } = useParams();
   const { getdoctorsDoctors } = useContext(AppContext);
-  console.log(getdoctorsDoctors)
 
-  // console.log(speciality);
-  const [filteredDoctors, SetfilteredDoctors] = useState([]);
+  const [filteredDoctors, setFilteredDoctors] = useState([]);
 
-  const filtereddoctors = () => {
-    const filterd = getdoctorsDoctors.filter(
+  const filterDoctors = () => {
+    const filtered = getdoctorsDoctors.filter(
       (item) => item.speciality === speciality
     );
-    SetfilteredDoctors(filterd);
+    setFilteredDoctors(filtered);
   };
 
   useEffect(() => {
-    filtereddoctors();
+    filterDoctors();
   }, [getdoctorsDoctors, speciality]);
 
+  const handleNavigate = (spec) => {
+    if (speciality === spec) {
+      navigate("/doctors");
+    } else {
+      navigate(`/doctors/${spec}`);
+    }
+  };
+
+  const specialities = [
+    "General physician",
+    "Gynecologist",
+    "Dermatologist",
+    "Pediatricians",
+    "Neurologist",
+    "Gastroenterologist",
+  ];
+
   return (
-    <div className="flex flex-col">
-      <div className="flex w-full m-3 ml-8 mb-5   h-[40px]">
-        <p className="text-xl  text-medium text-gray-600 mb-4   w-[400px]">
+    <div className="w-full px-4 sm:px-6 md:px-10 lg:px-20 py-10">
+      {/* Heading */}
+      <div className="mb-6">
+        <p className="text-xl font-medium text-gray-600">
           Browse through the doctors specialist.
         </p>
       </div>
 
-      <div className="flex ">
-        <div className=" w-[350px] ">
-          <div className="gap-3 text-gray-600  p-3 text-xl black text-medium">
-            <p
-              onClick={() =>
-                speciality === "General physician"
-                  ? navigate("/doctors")
-                  : navigate("/doctors/General physician")
-              }
-              className="mb-2 mt-4 hover:bg-slate-300 border-gray border rounded-md p-2 transition-all duration-150 "
-            >
-              General physician
-            </p>
-            <p
-              onClick={() =>
-                speciality === "Gynecologist"
-                  ? navigate("/doctors")
-                  : navigate("/doctors/Gynecologist")
-              }
-              className="mb-2 mt-4  border-gray border rounded-md hover:bg-slate-300 border-b-2 p-2 transition-all duration-150 "
-            >
-              Gynecologist
-            </p>
-            <p
-              onClick={() =>
-                speciality === "Dermatologist"
-                  ? navigate("/doctors")
-                  : navigate("/doctors/Dermatologist")
-              }
-              className="mb-2 mt-4 border-gray border rounded-md hover:bg-slate-300 border-b-2 p-2 transition-all duration-150 "
-            >
-              Dermatologist
-            </p>
-            <p
-              onClick={() =>
-                speciality === "Pediatricians"
-                  ? navigate("/doctors")
-                  : navigate("/doctors/Pediatricians")
-              }
-              className="mb-2 mt-4 border-gray border rounded-md hover:bg-slate-300 border-b-2 p-2 transition-all duration-150 "
-            >
-              Pediatricians
-            </p>
-            <p
-              onClick={() =>
-                speciality === ""
-                  ? navigate("/doctors")
-                  : navigate("/doctors/Neurologist")
-              }
-              className="mb-2 mt-4 border-gray border rounded-md hover:bg-slate-300 border-b-2 p-2 transition-all duration-150 "
-            >
-              Neurologist
-            </p>
-            <p
-              onClick={() =>
-                speciality === "Gastroenterologist"
-                  ? navigate("/doctors")
-                  : navigate("/doctors/Gastroenterologist")
-              }
-              className="mb-2 mt-4 border-gray border rounded-md hover:bg-slate-300 border-b-2 p-2 transition-all duration-150 "
-            >
-              Gastroenterologist
-            </p>
+      <div className="flex flex-col lg:flex-row gap-6">
+        {/* Sidebar */}
+        <div className="w-full lg:w-1/4">
+          <div className="flex lg:flex-col gap-3 overflow-x-auto scrollbar-hide text-gray-600 text-base font-medium">
+            {specialities.map((spec, index) => (
+              <p
+                key={index}
+                onClick={() => handleNavigate(spec)}
+                className="cursor-pointer whitespace-nowrap border border-gray-300 px-4 py-2 rounded-md hover:bg-slate-200 transition-all duration-150"
+              >
+                {spec}
+              </p>
+            ))}
           </div>
         </div>
 
-        {speciality ? (
-          <>
+        {/* Doctors Display */}
+        <div className="w-full">
+          {speciality ? (
             <AllDoctors speciality={filteredDoctors} />
-          </>
-        ) : (
-          <>
+          ) : (
             <AllDoctors />
-          </>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

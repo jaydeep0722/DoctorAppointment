@@ -1,43 +1,34 @@
+
 import React, { useContext, useEffect, useState } from "react";
-import { assets } from "../assets/assets/assets_frontend/assets.js";
 import { AppContext } from "../context/AppContexts.jsx";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 const MyProfile = () => {
-  const {
-    userData,
-    setUserData,
-
-    aToken,
-    loadUserProfileData,
-    backEndUrl,
-  } = useContext(AppContext);
+  const { userData, setUserData, aToken, loadUserProfileData, backEndUrl } =
+    useContext(AppContext);
 
   const [isEdit, SetIsEdit] = useState(false);
   const [image, setImage] = useState(false);
 
   const handleSubmit = async () => {
-
     try {
       const formData = new FormData();
-
       formData.append("name", userData.name);
       image && formData.append("image", image);
-
       formData.append("phoneNumber", userData.phoneNumber);
       formData.append("dob", userData.dob);
       formData.append("address", JSON.stringify(userData.address));
       formData.append("gender", userData.gender);
+
       const { data } = await axios.post(
         backEndUrl + "/api/user/updateProfileData",
         formData,
         { headers: { aToken } }
       );
-      console.log(data);
 
       if (data.success) {
-        toast.success("Profile updated success");
+        toast.success("Profile updated successfully");
         await loadUserProfileData();
         SetIsEdit(false);
         setImage(false);
@@ -45,24 +36,22 @@ const MyProfile = () => {
         toast.error(data.message);
       }
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
   return (
     userData && (
-      <div className="flex justify-start ml-48 items-center">
-        <div className="w-[570px] h-[670px]">
-          {isEdit ? (
-            <>
-              <label htmlFor="image">
-                <div className="w-[180px] cursor-pointer ">
-                  <img
-                    src={image ? URL.createObjectURL(image) : userData.image}
-                    className="w-[160px] h-[160px] rounded-md opacity-75 mt-10 mb-10"
-                  />
-                
-                </div>
+      <div className="flex justify-center items-start px-4 py-8">
+        <div className="w-full max-w-[600px]">
+          <div className="flex justify-center mb-6">
+            {isEdit ? (
+              <label htmlFor="image" className="cursor-pointer">
+                <img
+                  src={image ? URL.createObjectURL(image) : userData.image}
+                  className="w-[140px] h-[140px] object-cover rounded-md opacity-75"
+                  alt="profile"
+                />
                 <input
                   hidden
                   type="file"
@@ -70,149 +59,142 @@ const MyProfile = () => {
                   onChange={(e) => setImage(e.target.files[0])}
                 />
               </label>
-            </>
-          ) : (
-            <>
+            ) : (
               <img
-                className="w-[160px] h-[160px] rounded-md mt-10 mb-5"
+                className="w-[140px] h-[140px] object-cover rounded-md"
                 src={userData.image}
-                alt=""
+                alt="profile"
               />
-            </>
-          )}
+            )}
+          </div>
 
+          {/* Name */}
           {isEdit ? (
             <input
               value={userData.name}
-              className="w-[227px] h-[40px] mt-2 mb-2 text-black font-md text-xl "
+              className="w-full mb-4 p-2 border border-gray-300 rounded text-black font-medium text-lg"
               type="text"
               onChange={(e) =>
                 setUserData((prev) => ({ ...prev, name: e.target.value }))
               }
             />
           ) : (
-            <p className="mt-2  mb-2 w-[227px] h-[40px] text-black font-md text-xl ">
+            <p className="text-xl font-medium text-center mb-4">
               {userData.name}
             </p>
           )}
 
-          <p className="text-gray-500 text-2xl mt-2 mb-3">
-            CONTACT INFORMATION
-          </p>
-          <div className="flex  gap-6 mb-2">
-            <p className="font-md text-black">Email id:</p>
-            <p className="text-blue ">{userData.email}</p>
+          {/* Contact Info */}
+          <h3 className="text-gray-500 text-xl font-semibold mb-3">
+            Contact Information
+          </h3>
+          <div className="mb-2">
+            <span className="font-medium text-black">Email:</span>
+            <p className="text-blue-600">{userData.email}</p>
           </div>
 
-          <div className="flex  gap-8">
-            <p className="font-md text-black">Phone:</p>
+          <div className="mb-4">
+            <span className="font-medium text-black">Phone:</span>
             {isEdit ? (
               <input
-                type="Number"
+                type="tel"
                 value={userData.phone}
+                className="w-full mt-1 p-2 border border-gray-300 rounded"
                 onChange={(e) =>
                   setUserData((prev) => ({ ...prev, phone: e.target.value }))
                 }
               />
             ) : (
-              <p className="text-blue ">{userData.phone}</p>
+              <p className="text-blue-600">{userData.phone}</p>
             )}
           </div>
 
-          <div className="flex  gap-5">
-            <p className="font-md text-black mt-3">Address:</p>
+          {/* Address */}
+          <div className="mb-4">
+            <span className="font-medium text-black">Address:</span>
             {isEdit ? (
               <>
                 <input
+                  type="text"
+                  className="w-full mt-1 mb-2 p-2 border border-gray-300 rounded"
                   value={userData.address.line1}
-                  type="text"
-                  className="text-gray-500 mt-4"
                   onChange={(e) =>
                     setUserData((prev) => ({
                       ...prev,
-                      address: { ...prev, line1: e.target.value },
+                      address: { ...prev.address, line1: e.target.value },
                     }))
                   }
                 />
-
                 <input
                   type="text"
+                  className="w-full mb-2 p-2 border border-gray-300 rounded"
                   value={userData.address.line2}
-                  className="text-gray-500 ml-3 mt-4"
                   onChange={(e) =>
                     setUserData((prev) => ({
                       ...prev,
-                      address: { ...prev, line2: e.target.value },
+                      address: { ...prev.address, line2: e.target.value },
                     }))
                   }
                 />
               </>
             ) : (
-              <div className="flex-col">
-                <p className="text-gray-500 mt-3">{userData.address.line1}</p>
-
-                <p className="text-gray-500 mb-2">{userData.address.line2}</p>
-              </div>
+              <>
+                <p className="text-gray-600">{userData.address.line1}</p>
+                <p className="text-gray-600">{userData.address.line2}</p>
+              </>
             )}
           </div>
 
-          <p className="text-gray-500 text-xl mt-2 mb-3 ">BASIC INFORMATION</p>
-          <div className="flex  gap-6">
-            <p className="font-md text-black">Gender:</p>
+          {/* Basic Info */}
+          <h3 className="text-gray-500 text-xl font-semibold mb-3">
+            Basic Information
+          </h3>
+          <div className="mb-3">
+            <span className="font-medium text-black">Gender:</span>
             {isEdit ? (
-              <>
-                <select
-                  value={userData.dob}
-                  className="text-gray-500"
-                  onChange={(e) =>
-                    setUserData((prev) => ({ ...prev, gender: e.target.value }))
-                  }
-                >
-                  <option className="text-gray-500" value="MALE">
-                    MALE
-                  </option>
-                  <option className="text-gray-500" value="FEMALE">
-                    FEMALE
-                  </option>
-                </select>
-              </>
+              <select
+                className="w-full mt-1 p-2 border border-gray-300 rounded text-gray-700"
+                value={userData.gender}
+                onChange={(e) =>
+                  setUserData((prev) => ({ ...prev, gender: e.target.value }))
+                }
+              >
+                <option value="MALE">MALE</option>
+                <option value="FEMALE">FEMALE</option>
+              </select>
             ) : (
-              <>
-                <p className="text-gray-500 ">{userData.gender}</p>
-              </>
+              <p className="text-gray-600">{userData.gender}</p>
             )}
           </div>
 
-          <div className="flex  gap-4 mt-2">
-            <p className="font-md  text-black">Birthday:</p>
-
+          <div className="mb-6">
+            <span className="font-medium text-black">Birthday:</span>
             {isEdit ? (
-              <>
-                <input
-                  type="date"
-                  onChange={(e) =>
-                    setUserData((prev) => ({ ...prev, dob: e.target.value }))
-                  }
-                />
-              </>
+              <input
+                type="date"
+                className="w-full mt-1 p-2 border border-gray-300 rounded text-gray-700"
+                value={userData.dob}
+                onChange={(e) =>
+                  setUserData((prev) => ({ ...prev, dob: e.target.value }))
+                }
+              />
             ) : (
-              <p className="text-gray-500">{userData.dob}</p>
+              <p className="text-gray-600">{userData.dob}</p>
             )}
           </div>
 
+          {/* Buttons */}
           {isEdit ? (
             <button
-              type="submit"
-              className="bg-primary text-white mt-10 mb-10 justify-center items-center flex h-[54px] w-[230px] border border-blue-400 rounded-[44px] p-6"
               onClick={handleSubmit}
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded"
             >
               Save Information
             </button>
           ) : (
             <button
-              className="bg-primary text-white 
-               hover:bg-blue-700 hover:text-white mt-10 mb-10 justify-center items-center flex h-[54px] w-[127px] border border-blue-400 rounded-[44px] p-6"
               onClick={() => SetIsEdit(true)}
+              className="w-full py-3 bg-primary hover:bg-blue-700 text-white font-medium rounded"
             >
               Edit
             </button>

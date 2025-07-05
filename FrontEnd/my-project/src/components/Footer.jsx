@@ -8,69 +8,51 @@ const Footer = () => {
       <div
         className="
           border-b-2
-          flex flex-col gap-6
-          sm:grid sm:grid-cols-3
-          sm:gap-10
-          h-auto sm:h-[462px]
-          w-full sm:w-[1920px]
-          px-6 sm:px-0
+          flex flex-col sm:grid sm:grid-cols-3
+          gap-8 sm:gap-10
+          w-full
+          px-4 sm:px-12
+          py-10 sm:py-16
           font-sans
         "
       >
         {/* Left Section */}
-        <div className="mt-12 mb-20 gap-6 sm:gap-10">
+        <div>
           <img
-            className="ml-0 sm:ml-9 mt-5 mb-5 max-w-[150px] h-auto"
+            className="mt-2 mb-4 w-[120px] h-auto"
             src={assets.logo}
             alt="Logo"
           />
-          <p className="ml-0 sm:ml-9 max-w-full sm:w-[500px] mt-6 sm:mt-20 break-words leading-relaxed font-normal text-gray-600 text-sm sm:text-base">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book.
+          <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+            Prescripto helps you find trusted doctors and book appointments
+            instantly. Explore top specialists, view availability, and manage
+            your health with ease.
           </p>
         </div>
 
         {/* Middle Section */}
-        <div className="flex flex-col w-full sm:w-[500px] pl-0 sm:pl-8 mt-6 sm:mt-20">
-          <h3 className="mb-6 sm:mb-20 text-2xl sm:text-3xl text-gray-800 font-semibold">
+        <div>
+          <h3 className="text-xl sm:text-2xl text-gray-800 font-semibold mb-6">
             COMPANY
           </h3>
-          <ul className="ml-0 sm:ml-2 text-gray-600 mb-10 text-base sm:text-lg">
-            <li className="p-2 mb-2 text-gray-800 font-medium cursor-pointer ">
-              HOME
-            </li>
-            <li className="p-2 mb-2 text-gray-800 font-medium cursor-pointer ">
-              ABOUT US
-            </li>
-            <li className="p-2 mb-2 text-gray-800 font-medium cursor-pointer ">
-              CONTACT US
-            </li>
-            <li className="p-2 mb-2 text-gray-800 font-medium cursor-pointer ">
-              PRIVACY POLICY
-            </li>
+          <ul className="text-base text-gray-700 font-medium">
+            <li className="py-1">HOME</li>
+            <li className="py-1">ABOUT US</li>
+            <li className="py-1">CONTACT US</li>
+            <li className="py-1">PRIVACY POLICY</li>
           </ul>
         </div>
 
         {/* Right Section */}
-        <div className="flex flex-col w-full sm:w-[600px] text-black mt-6 sm:mt-20">
-          <h3 className="mb-6 sm:mb-20 text-2xl sm:text-3xl text-gray-800 font-semibold">
+        <div>
+          <h3 className="text-xl sm:text-2xl text-gray-800 font-semibold mb-6">
             GET IN TOUCH
           </h3>
-          <ul className="text-base sm:text-lg text-gray-800 font-medium">
-            <li className="p-2 mb-2 cursor-default">+1-212-456-7890</li>
-            <li className="p-2 mb-2 cursor-default">XYZ@gmail.com</li>
+          <ul className="text-base text-gray-700 font-medium">
+            <li className="py-1">+1-212-456-7890</li>
+            <li className="py-1">XYZ@gmail.com</li>
           </ul>
         </div>
-      </div>
-
-      {/* copyright text */}
-      <div className="mt-12 mb-12 text-gray-600 flex flex-col sm:flex-row justify-center items-center text-sm sm:text-base font-normal gap-2 sm:gap-4 px-6">
-        <hr className="w-full sm:w-auto border-gray-400 mb-2 sm:mb-0" />
-        <p className="text-center">
-          Copyright © 2024 XYZ - All Rights Reserved
-        </p>
       </div>
     </>
   );

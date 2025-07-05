@@ -1,46 +1,42 @@
+
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContexts";
 import AllDoctors from "../helper/AllDoctors";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const Appointments = () => {
   const navigate = useNavigate();
   const { docId } = useParams();
-
   const { getdoctorsDoctors, aToken, backEndUrl, getDoctorsData } =
     useContext(AppContext);
 
-  const [profileById, setProfileById] = useState([]); //docProfile
+  const [profileById, setProfileById] = useState([]);
   const [slotIndex, setSlotIndex] = useState(0);
   const [slotTime, setSlotTime] = useState("");
+  const [docSlots, setDocSlots] = useState([]);
+  const [filterdDoctors, setFilteredDoctors] = useState(null);
 
-  // find getdoctorsDoctors's bio by docId
+  const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+
   const findProfileById = async () => {
-    const profileById = getdoctorsDoctors.find((item) => item._id === docId);
-    console.log(profileById);
-    setProfileById(profileById);
+    const profile = getdoctorsDoctors.find((item) => item._id === docId);
+    setProfileById(profile);
   };
 
-  // timeslots
-  const [docSlots, setDocSlots] = useState([]);
   const getTimeSlots = async () => {
     setDocSlots([]);
-
     let today = new Date();
 
     for (let i = 0; i < 7; i++) {
       let Currday = new Date(today);
       Currday.setDate(today.getDate() + i);
 
-      // set endTime
       let endTime = new Date();
       endTime.setDate(today.getDate() + i);
       endTime.setHours(21, 0, 0, 0);
 
-      // setting hours
       if (today.getDate() === Currday.getDate()) {
         Currday.setHours(Currday.getHours() > 10 ? Currday.getHours() + 1 : 10);
         Currday.setMinutes(Currday.getMinutes() > 30 ? 30 : 0);
@@ -67,21 +63,13 @@ const Appointments = () => {
     }
   };
 
-  // booking slots
-  const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-
-  // Related getdoctorsDoctors
-
-  const [filterdDoctors, setFilteredDoctors] = useState(null);
   const getFiltered = () => {
-    console.log(profileById);
     const related = getdoctorsDoctors.filter(
       (item) => item.speciality === profileById.speciality
     );
     setFilteredDoctors(related);
   };
 
-  // book appointment
   const bookAppointment = async () => {
     if (!aToken) {
       toast.warn("Login to Book Appointment");
@@ -93,34 +81,30 @@ const Appointments = () => {
       const day = Datedata.getDate();
       const month = Datedata.getMonth() + 1;
       const year = Datedata.getFullYear();
-      const slotDate = day + "_" + month + "_" + year;
+      const slotDate = `${day}_${month}_${year}`;
 
-
-      console.log("aToken",aToken)
       const { data } = await axios.post(
-        backEndUrl + '/api/user/BooknewAppointment',
+        `${backEndUrl}/api/user/BooknewAppointment`,
         {
           docId,
           slotTime,
           slotDate,
         },
         {
-          headers:{
+          headers: {
             aToken,
           },
         }
       );
-      console.log(data);
 
       if (data.success) {
-        toast.success("Appointment Booked success");
+        toast.success("Appointment Booked successfully");
         getDoctorsData();
         navigate("/myappointments");
       } else {
         toast.error("Slot is not empty");
       }
     } catch (error) {
-      console.log(error);
       toast.error(error.message);
     }
   };
@@ -132,65 +116,64 @@ const Appointments = () => {
   useEffect(() => {
     getTimeSlots();
   }, [profileById]);
+
   useEffect(() => {
     getFiltered();
   }, [docSlots]);
 
   return (
     profileById && (
-      <div>
-        {/* main container of profile */}
-        <div className="flex h-[340px] gap-8 w-fill p-2 mt-[70px] ml-[100px]  ">
-          <div className="h-[331px] w-[356px] background flex justify-center rounded-md">
-            <img className="h-[332px] w-full " src={profileById.image} alt="" />
+      <div className="w-full px-4 sm:px-6 md:px-10 lg:px-24">
+        {/* Doctor Profile Section */}
+        <div className="flex flex-col md:flex-row gap-6 mt-12 mb-8 max-w-6xl mx-auto">
+          {/* Image */}
+          <div className="w-full md:w-1/3 flex justify-center">
+            <img
+              className="rounded-md object-cover h-72 md:h-[330px] w-full max-w-sm"
+              src={profileById.image}
+              alt={profileById.name}
+            />
           </div>
 
-          {/* bio */}
-
-          <div className="flex h-[331px] flex-col w-full gap-3 pt-3 border-gray-600 border rounded-md  text-black">
-            <div className="pt-5 pl-8 ">
-              <h2 className="font-medium text-2xl pb-2">{profileById.name}</h2>
-              <div className="flex text-gray-600 gap-2 pr-2 text-sm ">
-                <p className="pt-1">{profileById.degree}</p>
-                <p className="pt-1">{profileById.speciality}</p>
-                <p className="border-gray border rounded-xl p-1 text-sm">
-                  {profileById.experience}
-                </p>
-              </div>
+          {/* Bio */}
+          <div className="w-full border rounded-md p-4 text-black">
+            <h2 className="text-2xl font-semibold mb-2">{profileById.name}</h2>
+            <div className="flex flex-wrap gap-2 text-gray-600 text-sm mb-3">
+              <span>{profileById.degree}</span>
+              <span>{profileById.speciality}</span>
+              <span className="border rounded-xl px-2 py-1">
+                {profileById.experience}
+              </span>
             </div>
-
-            {/* about and fees */}
-            <div className=" pt-5 pl-8 ">
-              <p className="text-xl text-black pb-2  ">About:</p>
-              <p className="text-gray-600 text-sm">{profileById.about}</p>
-            </div>
-
-            <div className=" pt-5 pl-8 ">
-              <p className="text-gray-600 ">
-                Appointment fee:
-                <span className="text-black font-md">${profileById.fees}</span>
-              </p>
-            </div>
+            <p className="font-semibold mb-1 text-xl">About:</p>
+            <p className="text-sm text-gray-600 mb-4">{profileById.about}</p>
+            <p>
+              Appointment fee:{" "}
+              <span className="text-black font-medium">
+                ${profileById.fees}
+              </span>
+            </p>
           </div>
         </div>
 
         {/* Booking Slots */}
-        <div className="  text-gray  font-medium h-[400px] w-full ml-[400px] mt-7">
-          <p className="text-3xl text-gray-500 font-semibold p-4">
-            Booking slots
-          </p>
+        <div className="mt-10 max-w-5xl mx-auto text-black">
+          <h3 className="text-2xl font-semibold text-gray-600 mb-4">
+            Booking Slots
+          </h3>
 
-          <div className="flex gap-2 items-center h-48 w-full overflow-x-scroll scrollbar-none">
-            {docSlots.length &&
+          {/* Date Selection */}
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide py-2 mb-4">
+            {docSlots.length > 0 &&
               docSlots.map((item, index) => (
                 <div
-                  onClick={() => setSlotIndex(index)}
                   key={index}
-                  className={`  hover:bg-blue-700 hover:text-white text-center py-6 ml-3 mr-3 min-w-16 rounded-full gap-3 cursor-pointer ${
+                  onClick={() => setSlotIndex(index)}
+                  className={`min-w-16 text-center px-4 py-3 rounded-full cursor-pointer text-sm ${
                     slotIndex === index
                       ? "bg-primary text-white"
-                      : "border border-gray-200"
-                  } `}
+                      : "border border-gray-300 text-gray-700 hover:bg-blue-700 hover:text-white"
+                  }`}
                 >
                   <p>{item[0] && daysOfWeek[item[0].dateTime.getDay()]}</p>
                   <p>{item[0] && item[0].dateTime.getDate()}</p>
@@ -198,42 +181,38 @@ const Appointments = () => {
               ))}
           </div>
 
-          <div className="flex items-center gap-2 w-[650px] overflow-x-scroll scroll-smooth  ml-3">
-            {docSlots.length &&
+          {/* Time Selection */}
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide py-2 mb-6">
+            {docSlots.length > 0 &&
               docSlots[slotIndex].map((item, index) => (
                 <p
-                  onClick={() => {
-                    setSlotTime(item.time);
-                  }}
-                  className={`hover:bg-blue-700 hover:text-white text-sm font-light flex-shrink-0 px-5 py-3 rounded-full cursor-pointer ${
-                    item.time === slotTime
-                      ? "bg-primary text-white "
-                      : "text-gray-400 border border-gray-300"
-                  }`}
                   key={index}
+                  onClick={() => setSlotTime(item.time)}
+                  className={`text-sm px-4 py-2 rounded-full cursor-pointer flex-shrink-0 ${
+                    item.time === slotTime
+                      ? "bg-primary text-white"
+                      : "border border-gray-300 text-gray-600 hover:bg-blue-700 hover:text-white"
+                  }`}
                 >
                   {item.time.toLowerCase()}
                 </p>
               ))}
           </div>
 
+          {/* Book Button */}
           <button
             onClick={bookAppointment}
-            className="bg-primary background w-[350px] h-[52px] rounded-full mt-8 ml-2  p-2 hover:bg-blue-700"
+            className="bg-primary hover:bg-blue-700 text-white rounded-full px-6 py-3 w-full sm:w-64"
           >
             Book an Appointment
           </button>
         </div>
 
-        {/* Related getdoctorsDoctors */}
-
-        <div className="flex flex-col justify-center mt-32 items-center mb-10 text-black gap-3 ">
-          <p className="text-4xl font-medium mb-2 mt-2 ">
-            Related getdoctorsDoctors
-          </p>
-          <p className="text-md text-gray-700 mb-2 mt-2 ">
-            Simply browse through our extensive list of trusted
-            getdoctorsDoctors
+        {/* Related Doctors */}
+        <div className="text-center mt-20 mb-8 px-4">
+          <h2 className="text-3xl font-semibold mb-2">Related Doctors</h2>
+          <p className="text-gray-600 text-sm">
+            Simply browse through our list of trusted doctors.
           </p>
         </div>
 

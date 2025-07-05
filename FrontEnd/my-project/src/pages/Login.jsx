@@ -1,3 +1,4 @@
+
 import React, { useContext, useState } from "react";
 import { AppContext } from "../context/AppContexts";
 import axios from "axios";
@@ -13,126 +14,144 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (state == "Sign Up") {
+    if (state === "Sign Up") {
       try {
-        const { data } =await  axios.post(backEndUrl + '/api/user/RegisterUser', {
-          fullName,
-          email,
-          password,
-        });
-        console.log(backEndUrl + "/api/user/RegisterUser");
-        console.log(data.TOKEN)
+        const { data } = await axios.post(
+          `${backEndUrl}/api/user/RegisterUser`,
+          {
+            fullName,
+            email,
+            password,
+          }
+        );
 
         if (data.success) {
           setAToken(data.TOKEN);
           localStorage.setItem("aToken", data.TOKEN);
-          toast.success("Register  Success");
+          toast.success("Registration Successful");
           navigate("/login");
         } else {
-          toast.error('Registration failed')
+          toast.error("Registration failed");
         }
       } catch (error) {
-        console.log(error.message);
+        toast.error(error.message);
       }
     } else {
       try {
-        const { data } =await  axios.post(backEndUrl + '/api/user/loginUser', {
+        const { data } = await axios.post(`${backEndUrl}/api/user/loginUser`, {
           email,
           password,
         });
-        // console.log(backEndUrl + "/api/user/loginUser");
-        console.log(data)
 
         if (data.success) {
-          setAToken(data.TOKEN)
+          setAToken(data.TOKEN);
           localStorage.setItem("aToken", data.TOKEN);
-          toast.success("Login Success");
+          toast.success("Login Successful");
           navigate("/");
         } else {
           toast.error("Login failed");
         }
       } catch (error) {
-        console.log(error.message);
+        toast.error(error.message);
       }
     }
   };
+
   return (
-    <div className="flex justify-center h-[800px] items-center">
+    <div className="flex justify-center items-center min-h-screen px-4 py-12 bg-white">
       <form
         onSubmit={handleSubmit}
-        className="p-10 text-gray-500 border-gray border rounded-md h-[538px] w-[476px]"
+        className="w-full max-w-md bg-white border border-gray-300 rounded-md p-8 shadow-md"
       >
-        <div>
-          <h3 className="text-gray-600 text-xl font-bold mt-3 mb-2">
-            {state == "Sign Up" ? "Create Account" : "Login"}
-          </h3>
-          <p className="text-sm mb-2">
-            Please {state == "Sign Up" ? "Create Account" : "Login"} to book
-            appointment
-          </p>
-        </div>
+        <h3 className="text-2xl font-bold text-gray-700 mb-2">
+          {state === "Sign Up" ? "Create Account" : "Login"}
+        </h3>
+        <p className="text-sm text-gray-500 mb-6">
+          Please {state === "Sign Up" ? "create an account" : "log in"} to book
+          an appointment.
+        </p>
 
-        <div className="text-gray-600 gap-3  flex flex-col">
+        <div className="flex flex-col gap-4 text-gray-700">
           {state === "Sign Up" && (
-            <>
-              <label htmlFor="">Full Name</label>
+            <div>
+              <label htmlFor="name" className="block mb-1">
+                Full Name
+              </label>
               <input
-                className="h-[42px] text-black w-[342px] border-gray border rounded-sm"
+                id="name"
                 type="text"
+                className="w-full px-3 py-2 border border-gray-300 rounded"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
+                required
               />
-            </>
+            </div>
           )}
 
-          <label>Email</label>
-          <input
-            className="h-[42px] text-black w-[342px] border-gray border rounded-sm"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <label>Password</label>
-          <input
-            className="h-[42px] text-black w-[342px] border-gray border rounded-sm"
-            type="password"
-            autoComplete="current-password"
-            // autoComplete="off"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div>
+            <label htmlFor="email" className="block mb-1">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              autoComplete="email"
+              className="w-full px-3 py-2 border border-gray-300 rounded"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block mb-1">
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              autoComplete="current-password"
+              className="w-full px-3 py-2 border border-gray-300 rounded"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
         </div>
 
-        <button type="submit" className="w-[342px] text-xl  h-[50px] rounded-md background text-white items-center p-2 mt-5 mb-3">
-          {state == "Sign Up" ? "Create Account" : "Login"}
+        <button
+          type="submit"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg py-2 rounded mt-6"
+        >
+          {state === "Sign Up" ? "Create Account" : "Login"}
         </button>
 
-        <div className="mt-3">
-          {state == "Sign Up" ? (
-            <p className="cursor-pointer">
-              Already have an account?
+        <p className="text-sm mt-4 text-center text-gray-600">
+          {state === "Sign Up" ? (
+            <>
+              Already have an account?{" "}
               <span
                 onClick={() => setState("Login")}
-                className="text-blue-500 underline"
+                className="text-blue-500 underline cursor-pointer"
               >
-                Login Here
+                Login here
               </span>
-            </p>
+            </>
           ) : (
-            <p className="cursor-pointer">
-              Create New Account?
+            <>
+              Don't have an account?{" "}
               <span
                 onClick={() => setState("Sign Up")}
-                className="text-blue-500 underline"
+                className="text-blue-500 underline cursor-pointer"
               >
-                Sign Up Here
+                Sign up here
               </span>
-            </p>
+            </>
           )}
-        </div>
+        </p>
       </form>
     </div>
   );

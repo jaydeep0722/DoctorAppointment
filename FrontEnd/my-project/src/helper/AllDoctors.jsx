@@ -1,3 +1,4 @@
+
 import React, { useContext } from "react";
 import { AppContext } from "../context/AppContexts";
 import { Link, useNavigate } from "react-router-dom";
@@ -5,34 +6,36 @@ import { Link, useNavigate } from "react-router-dom";
 const AllDoctors = ({ speciality }) => {
   const navigate = useNavigate();
   const { getdoctorsDoctors } = useContext(AppContext);
+
+  const doctors = speciality ? speciality : getdoctorsDoctors;
+
   return (
-    <div className=" flex h-[800px] ml-22 p-20  w-[1468px] object-contain flex-wrap justify-between mt-4">
-      {(speciality ? speciality : getdoctorsDoctors).map((item, index) => (
-        <Link to={`/appointments/${item._id}`} key={index}>
-          <div
-            onClick={() => navigate(`/appointments/${getdoctorsDoctors._id}`)}
-            className="hover:scale-105 transition-all border-gray rounded-md border  justify-center items-center  h-[304px] w-[270px] flex flex-col  mt-2"
-          >
-            <div className="flex h-[203px]  w-[270px] rounded-md bg-gray-300">
+    <div className="flex flex-wrap justify-center gap-4 p-4 sm:p-6 md:p-8">
+      {doctors.map((item, index) => (
+        <Link
+          to={`/appointments/${item._id}`}
+          key={index}
+          className="w-full sm:w-[48%] md:w-[32%] lg:w-[22%] max-w-xs"
+        >
+          <div className="hover:scale-105 transition-transform duration-300 border border-gray-300 rounded-lg overflow-hidden bg-white">
+            <div className="w-full h-48 bg-gray-100 flex justify-center items-center">
               <img
-                className="h-[182px] w-[280px] object-contain"
+                className="h-full object-contain"
                 src={item.image}
-                alt="image"
+                alt="Doctor"
               />
             </div>
 
-            <div className="bg-white text-black  w-[273px] ">
+            <div className="p-3 text-center">
               <p
-                className={`p-2 ${
+                className={`font-medium ${
                   item.available ? "text-green-500" : "text-gray-500"
-                }  font-medium `}
+                }`}
               >
-                *{item.available ? "Available" : "Not Available"}
+                * {item.available ? "Available" : "Not Available"}
               </p>
-              <div className="font-medium ml-2">
-                <h2 className="text-2xl">{item.name}</h2>
-                <h5 className="text-sm">{item.speciality}</h5>
-              </div>
+              <h2 className="text-xl font-semibold mt-1">{item.name}</h2>
+              <h5 className="text-sm text-gray-600">{item.speciality}</h5>
             </div>
           </div>
         </Link>

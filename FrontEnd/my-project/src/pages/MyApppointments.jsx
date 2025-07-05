@@ -1,14 +1,15 @@
+
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContexts";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const MyApppointments = () => {
+const MyAppointments = () => {
   const navigate = useNavigate();
   const { backEndUrl, aToken, getDoctorsData } = useContext(AppContext);
-
   const [appointments, setAppointments] = useState([]);
+
   const months = [
     "",
     "Jan",
@@ -26,36 +27,30 @@ const MyApppointments = () => {
   ];
 
   const slotDateFormat = (slotDate) => {
-    const dateArray = slotDate.split("_");
-    return dateArray[0] + " " + months[Number(1)] + " " + dateArray[2];
+    const [day, month, year] = slotDate.split("_");
+    return `${day} ${months[Number(month)]} ${year}`;
   };
 
   const getUsersAppointments = async () => {
     try {
-      const { data } = await axios.get(backEndUrl + "/api/user/appointments", {
+      const { data } = await axios.get(`${backEndUrl}/api/user/appointments`, {
         headers: { aToken },
       });
       if (data.success) {
         setAppointments(data.appointments.reverse());
-        console.log(data.appointments);
       }
     } catch (error) {
-      console.log(error);
       toast.error(error.message);
     }
   };
 
-  // cancel appointments
   const CancelAppointment = async (appointmentId) => {
     try {
-      console.log(appointmentId);
-
       const { data } = await axios.post(
-        backEndUrl + "/api/user/CancelAppointment",
+        `${backEndUrl}/api/user/CancelAppointment`,
         { appointmentId },
         { headers: { aToken } }
       );
-
       if (data.success) {
         toast.success(data.message);
         getUsersAppointments();
@@ -64,12 +59,9 @@ const MyApppointments = () => {
         toast.error(data.message);
       }
     } catch (error) {
-      console.log(error.message);
       toast.error(error.message);
     }
   };
-
-  // make payment
 
   const initPay = (order) => {
     const options = {
@@ -81,24 +73,18 @@ const MyApppointments = () => {
       order_id: order.id,
       receipt: order.receipt,
       handler: async (response) => {
-        console.log(response);
-
-        const razorpay_order_id = response.razorpay_order_id;
-
         try {
           const { data } = await axios.post(
-            backEndUrl + "/api/user/verifyPayment",
-            { razorpay_order_id },
+            `${backEndUrl}/api/user/verifyPayment`,
+            { razorpay_order_id: response.razorpay_order_id },
             { headers: { aToken } }
           );
-
           if (data.success) {
-            toast.success("Payment Success");
+            toast.success("Payment Successful");
             getUsersAppointments();
             navigate("/myappointments");
           }
         } catch (error) {
-          console.log(error.message);
           toast.error(error.message);
         }
       },
@@ -109,100 +95,95 @@ const MyApppointments = () => {
 
   const appointmentRazorPay = async (appointmentId) => {
     try {
-      // console.log(appointmentId);
       const { data } = await axios.post(
-        backEndUrl + "/api/user/PaymentRazorPay",
+        `${backEndUrl}/api/user/PaymentRazorPay`,
         { appointmentId },
         { headers: { aToken } }
       );
-
       if (data.success) {
         toast.success(data.message);
-
         initPay(data.order);
-        console.log(data.order);
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      console.log(error.message);
-      toast.error(error.mesdage);
+      toast.error(error.message);
     }
   };
 
   useEffect(() => {
-    if (aToken) {
-      getUsersAppointments();
-    }
+    if (aToken) getUsersAppointments();
   }, [aToken]);
 
-  const filtered = appointments.slice(0, 1);
   return (
-    <div className="h-[225px] w-[1525px]  flex flex-col gap-4 p-3 m-2 ">
+    <div className="w-full max-w-screen-xl mx-auto px-4 py-6 space-y-6">
       {appointments.map((item, index) => (
-        <div key={index} className="flex shadow-box">
+        <div
+          key={index}
+          className="flex flex-col lg:flex-row bg-white shadow-md rounded-md overflow-hidden p-4 gap-4"
+        >
           <img
-            className="h-[200px] ml-3 mt-3 bg-gray-300 w-[200px] mr-6"
+            className="w-full h-56 lg:h-[200px] lg:w-[200px] object-cover rounded"
             src={item.docData.image}
-            alt=""
+            alt="doctor"
           />
-          <div className="flex flex-col ">
-            <h3 className="text-black mt-2 font-md text-xl ">
-              {item.docData.name}
-            </h3>
-            <p className="text-gray-500 text-sm mb-4">
-              {item.docData.speciality}
-            </p>
-            <p className="text-gray-600 mb-2 ">Address:</p>
-            <p className="text-gray-600 mb-2 ">{item.docData.address.line1}</p>
-            <p className="text-gray-600 mb-2 ">{item.docData.address.line2}</p>
-            <p className="text-gray-600 mb-2">Date & Time: </p>
-            <p
-              className="
-              text-gray-500
-              mb-2"
-            >
-              {slotDateFormat(item.slotDate)}|{item.slotTime}
-            </p>
-          </div>
+          <div className="flex flex-col justify-between flex-1">
+            <div>
+              <h3 className="text-black font-semibold text-xl">
+                {item.docData.name}
+              </h3>
+              <p className="text-gray-500 text-sm mb-2">
+                {item.docData.speciality}
+              </p>
+              <p className="text-gray-600 text-sm">Address:</p>
+              <p className="text-gray-600 text-sm">
+                {item.docData.address.line1}
+              </p>
+              <p className="text-gray-600 text-sm">
+                {item.docData.address.line2}
+              </p>
+              <p className="text-gray-600 text-sm mt-2">Date & Time:</p>
+              <p className="text-gray-500 text-sm">
+                {slotDateFormat(item.slotDate)} | {item.slotTime}
+              </p>
+            </div>
 
-          <div className="flex flex-col justify-end items-end gap-5 pb-6 w-[1050px] ">
-            {!item.cancelled && item.payment && !item.isCompleted && (
-              <button className="h-[49px] w-[223px]  text-white font-md bg-green-600">
-                Paid
-              </button>
-            )}
-            {!item.cancelled && !item.payment && !item.isCompleted && (
-              <button
-                onClick={() => appointmentRazorPay(item?._id)}
-                className="h-[49px] w-[223px]  text-white font-md background"
-              >
-                Pay Online
-              </button>
-            )}
-            {!item.cancelled && !item.isCompleted && (
-              <button
-                onClick={() => CancelAppointment(item._id)}
-                className="h-[49px] w-[223px] shadow-box text-gray-700 font-md"
-              >
-                Cancel Appointment
-              </button>
-            )}
-
-            {item.cancelled && !item.isCompleted && (
-              <button
-                onClick={() => CancelAppointment(item._id)}
-                className="h-[49px] w-[223px] shadow-box border text-white bg-red-500 border-red-500  font-md"
-              >
-                Cancelled Appointment
-              </button>
-            )}
-
-            {item.isCompleted && (
-              <button className="h-[49px] w-[223px]  text-white font-md bg-green-600">
-                Completed
-              </button>
-            )}
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 mt-4">
+              {!item.cancelled && item.payment && !item.isCompleted && (
+                <button className="px-4 py-2 bg-green-600 text-white rounded">
+                  Paid
+                </button>
+              )}
+              {!item.cancelled && !item.payment && !item.isCompleted && (
+                <button
+                  onClick={() => appointmentRazorPay(item._id)}
+                  className="px-4 py-2 bg-blue-600 text-white rounded"
+                >
+                  Pay Online
+                </button>
+              )}
+              {!item.cancelled && !item.isCompleted && (
+                <button
+                  onClick={() => CancelAppointment(item._id)}
+                  className="px-4 py-2 border border-gray-400 text-gray-700 rounded"
+                >
+                  Cancel Appointment
+                </button>
+              )}
+              {item.cancelled && !item.isCompleted && (
+                <button
+                  className="px-4 py-2 bg-red-500 text-white rounded cursor-not-allowed"
+                  disabled
+                >
+                  Cancelled
+                </button>
+              )}
+              {item.isCompleted && (
+                <button className="px-4 py-2 bg-green-600 text-white rounded">
+                  Completed
+                </button>
+              )}
+            </div>
           </div>
         </div>
       ))}
@@ -210,4 +191,4 @@ const MyApppointments = () => {
   );
 };
 
-export default MyApppointments;
+export default MyAppointments;

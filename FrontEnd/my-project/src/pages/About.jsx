@@ -1,46 +1,50 @@
+
 import React from "react";
 import { assets } from "../assets/assets/assets_frontend/assets.js";
 
 const About = () => {
   return (
-    <div>
-      <div className="flex justify-center align-middle mt-32 ">
-        <p className="w-[153px] h-[80px] text-black text-3xl ">
+    <div className="text-black px-4 sm:px-6 md:px-12 lg:px-24">
+      {/* Title */}
+      <div className="flex justify-center mt-20 mb-10">
+        <p className="text-3xl font-semibold">
           <span>ABOUT</span>
           <b className="ml-2">US</b>
         </p>
       </div>
 
-      <div className="flex gap-10">
-        {/* img */}
+      {/* Image + Paragraph Section */}
+      <div className="flex flex-col md:flex-row items-center gap-8">
+        {/* Image */}
         <img
-          className="w-[438px] mt-[100px] ml-[196px] gap-9 h-[445px]"
+          className="w-full max-w-md h-auto rounded-md"
           src={assets.about_image}
+          alt="About Us"
         />
 
-        {/* right side para */}
-        <div className="flex flex-col  mt-[100px] w-[600px] line h-[448px]  text-black text-sm">
-          <p className="mb-15 mt-2 ">
+        {/* Text Content */}
+        <div className="flex flex-col text-sm max-w-xl mt-6 md:mt-0">
+          <p>
             Welcome to Prescripto, your trusted partner in managing your
             healthcare needs conveniently and efficiently. At Prescripto, we
             understand the challenges individuals face when it comes to
             scheduling doctor appointments and managing their health records.
           </p>
-          <br />
-          <p className="mb-5 mt-10">
+
+          <p className="mt-6">
             Prescripto is committed to excellence in healthcare technology. We
             continuously strive to enhance our platform, integrating the latest
             advancements to improve user experience and deliver superior
             service. Whether you're booking your first appointment or managing
             ongoing care, Prescripto is here to support you every step of the
-            way
+            way.
           </p>
-          <br />
-          <h3 className="font-gray-600 mt-5 mb-5  text-gray-600 text-3xl ">
+
+          <h3 className="text-2xl text-gray-600 mt-6 mb-3">
             Our <span className="text-black font-medium">Vision</span>
           </h3>
-          <br />
-          <p className="mt-15">
+
+          <p>
             Our vision at Prescripto is to create a seamless healthcare
             experience for every user. We aim to bridge the gap between patients
             and healthcare providers, making it easier for you to access the
@@ -49,33 +53,35 @@ const About = () => {
         </div>
       </div>
 
-      <div className="ml-[196px] text-black mt-[100px] mb-[400px]">
-        <div className="mt-5 mb-10">
-          <b className="w-[281px] h-[80px] text-2xl">
-            <span className="mr-2 text-gray-600">WHY</span>Choose Us
-          </b>
-        </div>
+      {/* Why Choose Us Section */}
+      <div className="mt-20 mb-20">
+        <h2 className="text-2xl mb-6 font-semibold text-center">
+          <span className="text-gray-600 mr-2">WHY</span>Choose Us
+        </h2>
 
-        <div className="w-[1587px] mt-[20px]   flex border-gray border pt-9 pl-9 ">
-          <div className="gap-3 ">
-            <b className="text-xl font-medium">Efficiency:</b>
-            <p className="w-2/3 mt-4 mb-5 ">
+        <div className="flex flex-col md:flex-row gap-6 border border-gray-300 p-6 rounded-md">
+          {/* Card 1 */}
+          <div className="flex-1">
+            <b className="text-xl">Efficiency:</b>
+            <p className="mt-3">
               Streamlined appointment scheduling that fits into your busy
               lifestyle.
             </p>
           </div>
 
-          <div>
-            <b className="text-xl font-medium">Convenience:</b>
-            <p className="w-2/3 mt-4 mb-5 ">
+          {/* Card 2 */}
+          <div className="flex-1">
+            <b className="text-xl">Convenience:</b>
+            <p className="mt-3">
               Access to a network of trusted healthcare professionals in your
-              area
+              area.
             </p>
           </div>
 
-          <div>
-            <b className="text-xl font-medium">Personalization:</b>
-            <p className="w-2/3 mt-4 mb-5 ">
+          {/* Card 3 */}
+          <div className="flex-1">
+            <b className="text-xl">Personalization:</b>
+            <p className="mt-3">
               Tailored recommendations and reminders to help you stay on top of
               your health.
             </p>
