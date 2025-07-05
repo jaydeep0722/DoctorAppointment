@@ -21,10 +21,15 @@ connectCloudinary()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 // Enable CORS
-app.use(cors({
-  origin: 'https://doctor-appointment-a9nj.vercel.app', // Your Vercel frontend
-  credentials: true //  using cookies 
-}));
+app.use(
+  cors({
+    origin: [
+      "https://doctor-appointment-a9nj.vercel.app", // frontend
+      "https://doctor-appointment-admin-nu.vercel.app", // admin
+    ],
+    credentials: true,
+  })
+);
 
 
 // Routes
