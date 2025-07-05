@@ -1,4 +1,3 @@
-
 import React, { useContext, useState } from "react";
 import { AppContext } from "../context/AppContexts";
 import axios from "axios";
@@ -19,12 +18,19 @@ const Login = () => {
 
     if (state === "Sign Up") {
       try {
+        console.log("🔸 Sending:", { fullName, email, password });
+
         const { data } = await axios.post(
-          `${backEndUrl}/api/user/RegisterUser`,
+          `${backEndUrl}/api/user/registerUser`, // ✅ fixed lowercase 'r'
           {
             fullName,
             email,
             password,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
           }
         );
 
@@ -32,12 +38,13 @@ const Login = () => {
           setAToken(data.TOKEN);
           localStorage.setItem("aToken", data.TOKEN);
           toast.success("Registration Successful");
-          navigate("/login");
+          console.log("Registration done. Navigating to login...");
+          setState("/login");
         } else {
-          toast.error("Registration failed");
+          toast.error(data.message || "Registration failed");
         }
       } catch (error) {
-        toast.error(error.message);
+        toast.error(error.response?.data?.message || error.message);
       }
     } else {
       try {
@@ -45,14 +52,12 @@ const Login = () => {
           email,
           password,
         });
-
         if (data.success) {
           setAToken(data.TOKEN);
           localStorage.setItem("aToken", data.TOKEN);
           toast.success("Login Successful");
+
           navigate("/");
-        } else {
-          toast.error("Login failed");
         }
       } catch (error) {
         toast.error(error.message);
