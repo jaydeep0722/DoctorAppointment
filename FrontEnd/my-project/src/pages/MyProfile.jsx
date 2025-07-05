@@ -61,10 +61,7 @@ const MyProfile = () => {
                     src={image ? URL.createObjectURL(image) : userData.image}
                     className="w-[160px] h-[160px] rounded-md opacity-75 mt-10 mb-10"
                   />
-                  {/* <img
-                    src={image ? "" : assets.upload_icon}
-                    className="absolute w-10 bottom-12 right-12 rounded-md opacity-75 "
-                  /> */}
+                
                 </div>
                 <input
                   hidden
